@@ -6,8 +6,16 @@ public class Environment {
     public Environment() {
     }
 
-    public Environment(Weather weather) {
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Weather weather) {
         this.weather = weather;
+    }
+
+    public Environment(Weather weather) {
+        this.setWeather(weather);
     }
     
     //TODO all kind of events

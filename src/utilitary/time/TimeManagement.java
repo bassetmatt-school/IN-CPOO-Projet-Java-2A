@@ -1,4 +1,5 @@
-package utilitary;
+package utilitary.time;
+
 public class TimeManagement {
     private Day today;
     private Day firstOfTheYear;

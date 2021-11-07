@@ -1,4 +1,4 @@
-package utilitary;
+package utilitary.time;
 
 public enum Month{
     JANUARY   (31,  0),
@@ -20,6 +20,14 @@ public enum Month{
     private Month(int length, int number) {
         this.length = length;
         this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getLength() {
+        return length;
     }
 
     

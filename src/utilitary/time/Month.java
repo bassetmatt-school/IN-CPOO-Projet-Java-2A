@@ -18,7 +18,7 @@ public enum Month{
     private final int length;
     private final int lengthCum;
 
-    private Month(int length, int number, int lengthCum) {
+    private Month(int number, int length, int lengthCum) {
         this.number = number;
         this.length = length;
         this.lengthCum = lengthCum;

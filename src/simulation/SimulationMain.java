@@ -1,6 +1,5 @@
 package simulation;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 
 import data.DataOutput;
 import data.AnnualReport;

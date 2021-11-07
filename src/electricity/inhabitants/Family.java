@@ -7,4 +7,5 @@ public class Family extends Consumer{
         super();
         this.addDevice(new Oven());
     }
+
 }

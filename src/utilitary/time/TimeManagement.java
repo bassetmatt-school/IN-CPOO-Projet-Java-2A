@@ -8,7 +8,7 @@ abstract public class TimeManagement {
 
     public static int whichDay(int day)
     {
-        int todaynum = (day - firstOfTheYear.number)%7;
+        int todaynum = (7 + day - firstOfTheYear.number)%7;
         return todaynum;
     }
 

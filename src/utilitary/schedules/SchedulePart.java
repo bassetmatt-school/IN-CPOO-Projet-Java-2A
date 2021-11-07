@@ -45,5 +45,13 @@ public class SchedulePart {
         this.durationCum = durationCum;
     }
 
+
+    @Override
+    public String toString() {
+        return "{" + getConso() +
+            "," + getDuration()+ "}";
+    }
+    
+
 }
 

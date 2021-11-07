@@ -1,4 +1,4 @@
-package dataout;
+package data;
 public class DailyReport {
     private int day;
     private int[] time;

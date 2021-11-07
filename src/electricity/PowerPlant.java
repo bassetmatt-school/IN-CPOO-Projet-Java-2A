@@ -3,9 +3,6 @@ package electricity;
 import utilitary.schedules.Schedule;
 
 public class PowerPlant extends ElecEntity {
-	public PowerPlant() {
-		super(0.);
-	}
 
 	public PowerPlant(double power) {
 		super(power);

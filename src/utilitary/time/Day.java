@@ -10,32 +10,32 @@ public enum Day {
 	}
 
 	public int getNumber() {
-		return this.number;
+		return number;
 	}
 
 	public final static Day numToDay(int num) throws IllegalArgumentException {
 		Day day = null;
 		switch (num) {
 		case 0:
-			day = Day.MONDAY;
+			day = MONDAY; 
 			break;
 		case 1:
-			day = Day.TUESDAY;
+			day = TUESDAY;
 			break;
 		case 2:
-			day = Day.WEDNESDAY;
+			day = WEDNESDAY;
 			break;
 		case 3:
-			day = Day.THURSDAY;
+			day = THURSDAY;
 			break;
 		case 4:
-			day = Day.FRIDAY;
+			day = FRIDAY;
 			break;
 		case 5:
-			day = Day.SATURDAY;
+			day = SATURDAY;
 			break;
 		case 6:
-			day = Day.SUNDAY;
+			day = SUNDAY;
 			break;
 		default:
 			throw new IllegalArgumentException("Day number must be between 0 and 6");

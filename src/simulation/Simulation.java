@@ -2,7 +2,7 @@ package simulation;
 import java.util.ArrayList;
 
 import city.Environment;
-import dataout.DailyReport;
+import data.DailyReport;
 import electricity.Consumer;
 import electricity.Device;
 import electricity.ElecEntity;

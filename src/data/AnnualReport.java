@@ -1,17 +1,20 @@
-package dataout;
+package data;
 public class AnnualReport {
     private int[] day;
     private double[] consoInstant;
     private double[] prodInstant ;
     private double[] consoCumul  ;
     private double[] prodCumul   ;
+    private DailyReport[] dRepList;
 
     public AnnualReport() {
+        
         this.day = new int[365] ;
         this.consoInstant = new double[365] ;
         this.prodInstant  = new double[365] ;
         this.consoCumul   = new double[365] ;
         this.prodCumul    = new double[365] ;
+        this.dRepList     = new DailyReport[365];
     }
 
 
@@ -43,6 +46,15 @@ public class AnnualReport {
         return this.prodCumul;
     }
 
+    public DailyReport[] getdRepList() {
+        return dRepList;
+    }
+
+
+    public void setdRepList(DailyReport dRep, int i) {
+        this.dRepList[i] = dRep;
+    }
+
     @Override
     public String toString() {
         String result = "";
@@ -58,9 +70,9 @@ public class AnnualReport {
     }
 
 
-    public void complete(DailyReport[] dRepList) {
+    public void complete() {
         int i = 0;
-        for (DailyReport dRep : dRepList) {
+        for (DailyReport dRep : this.dRepList) {
             this.day[i] = i;
             this.consoInstant[i] = dRep.getConsoInstant()[1439];
             this.prodInstant[i]  = dRep.getProdInstant()[1439];

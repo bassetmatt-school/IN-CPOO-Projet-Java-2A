@@ -1,38 +1,20 @@
 package utilitary.time;
 
-public class TimeManagement {
-    private Day today;
-    private Day firstOfTheYear;
-    public int timeToDay(int time) {
-        return time/1440;
-    }
+abstract public class TimeManagement {
+    //TODO say it's constant or change
+    private static final Day firstOfTheYear = Day.SATURDAY;
 
-    /**
-     * Constructor of the class
-     * @param firstOfTheYear
-     */
-    public TimeManagement(Day firstOfTheYear) {
-        this.firstOfTheYear = firstOfTheYear;
-    }
 
-    public Day getToday() {
-        return this.today;
-    }
 
-    public void setFirstOfTheYear(Day firstOfTheYear) {
-        this.firstOfTheYear = firstOfTheYear;
-    }
-
-    public void whichDay(int time)
+    public static int whichDay(int day)
     {
-        int todaynum = (timeToDay(time) - firstOfTheYear.number)%7;
-        this.today = Day.numToDay(todaynum);
+        int todaynum = (day - firstOfTheYear.number)%7;
+        return todaynum;
     }
-    /* Maybe stupid
-    public void whichMonth(int time) {
-        return time/(1440*30);
+
+    public static int whichMonth(int day) {
+        return Month.dayToMonth(day).getNumber();
     }
-    */
     public static void main(String[] args) {
         
     }

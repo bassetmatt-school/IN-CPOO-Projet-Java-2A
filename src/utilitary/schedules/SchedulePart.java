@@ -4,17 +4,35 @@ package utilitary.schedules;
  * Easier to handle than a int[] array
  */
 public class SchedulePart {
-	private int conso;
-	private int duration;
+    /**
+     * A class that describes sub parts of a schedule, each part is characterized by
+     * the fact that its consumption is constant
+     */
+    /** The consumption during the period */
+    private int conso;
+    /** The duration of the period */
+    private int duration;
+    /** The sum of the durations of the precedent parts */
     private int durationCum;
 
-
+    /**
+     * Constructor without the cumulated duration
+     * 
+     * @param conso
+     * @param duration
+     */
     public SchedulePart(int conso, int duration) {
         this.conso = conso;
         this.duration = duration;
         this.durationCum = duration;
     }
-    
+
+    /**
+     * Constructor with the cumulated duration
+     * 
+     * @param conso
+     * @param duration
+     */
     public SchedulePart(int conso, int duration, int durationCum) {
         this.conso = conso;
         this.duration = duration;
@@ -45,13 +63,9 @@ public class SchedulePart {
         this.durationCum = durationCum;
     }
 
-
     @Override
     public String toString() {
-        return "{" + getConso() +
-            "," + getDuration()+ "}";
+        return "{" + getConso() + "," + getDuration() + "}";
     }
-    
 
 }
-

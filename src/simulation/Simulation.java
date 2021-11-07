@@ -1,36 +1,27 @@
 package simulation;
+
 import java.util.ArrayList;
 
-import city.Environment;
 import data.DailyReport;
 import electricity.Consumer;
 import electricity.Device;
 import electricity.ElecEntity;
 import electricity.PowerPlant;
 
-
 public class Simulation {
 	private ArrayList<Consumer> consumerlist;
 	private ArrayList<PowerPlant> plantlist;
-	private Environment env;
 
 	private ArrayList<Device> deviceList = new ArrayList<Device>();
-
-	//TODO remove
-	public Environment getEnv() {
-		return env;
-	}
 
 	public Simulation() {
 		this.consumerlist = new ArrayList<Consumer>();
 		this.plantlist = new ArrayList<PowerPlant>();
-		this.env = new Environment();
 	}
 
-	public Simulation(ArrayList<Consumer> consumerlist, ArrayList<PowerPlant> plantlist, Environment env) {
+	public Simulation(ArrayList<Consumer> consumerlist, ArrayList<PowerPlant> plantlist) {
 		this.consumerlist = consumerlist;
 		this.plantlist = plantlist;
-		this.env = env;
 	}
 
 	public void addConsumer(Consumer cons) {
@@ -55,22 +46,20 @@ public class Simulation {
 		double yearPow;
 		int consoMinute;
 		for (ElecEntity ent : this.deviceList) {
-			yearPow = ent.getPowerYear(i)/100;
-			for(int minute = 0; minute<1440; minute++) {
+			yearPow = ent.getPowerYear(i) / 100;
+			for (int minute = 0; minute < 1440; minute++) {
 				consoMinute = ent.getConsoMinute(minute);
-				dRep.addMinuteConso(minute, consoMinute/100*yearPow);
+				dRep.addMinuteConso(minute, consoMinute / 100 * yearPow);
 			}
 		}
-		for (ElecEntity ent :this.plantlist) {
-			yearPow = ent.getPowerYear(i)/100;
-			for(int minute = 0; minute<1440; minute++) {
+		for (ElecEntity ent : this.plantlist) {
+			yearPow = ent.getPowerYear(i) / 100;
+			for (int minute = 0; minute < 1440; minute++) {
 				consoMinute = ent.getConsoMinute(minute);
-				dRep.addMinuteProd(minute, consoMinute/100*yearPow);
+				dRep.addMinuteProd(minute, consoMinute / 100 * yearPow);
 			}
 		}
 		return dRep;
 	}
-	
-
 
 }

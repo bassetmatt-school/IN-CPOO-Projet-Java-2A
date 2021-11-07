@@ -13,9 +13,12 @@ public class Consumer {
 		this.devicelist = devicelist;
 	}
 
-	
 	public ArrayList<Device> getDevicelist() {
-		return this.devicelist;
+		return devicelist;
+	}
+
+	public ArrayList<Device> setDevicelist(ArrayList<Device> devicelist) {
+		return this.devicelist = devicelist;
 	}
 
 	public void addDevice(Device dev) {

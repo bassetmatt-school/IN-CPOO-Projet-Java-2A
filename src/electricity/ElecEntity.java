@@ -11,6 +11,7 @@ abstract public class ElecEntity {
 		this.power = power;
 		this.schedule = new Schedule();
 	}
+
 	public ElecEntity(double power, Schedule schedule) {
 		this.power = power;
 		this.schedule = schedule;
@@ -32,7 +33,7 @@ abstract public class ElecEntity {
 		this.power = power;
 	}
 
-	public int getConsoMinute(int i) throws IllegalArgumentException{
+	public int getConsoMinute(int i) throws IllegalArgumentException {
 		for (SchedulePart sp : this.getSchedule().getDaySchedule()) {
 			if (i < sp.getDurationCum()) {
 				return sp.getConso();
@@ -41,12 +42,18 @@ abstract public class ElecEntity {
 		throw new IllegalArgumentException("Your index must be inferior to 1440");
 	}
 
-	public double getPowerYear(int i) throws IllegalArgumentException{
+	public double getPowerYear(int i) throws IllegalArgumentException {
 		for (SchedulePart sp : this.getSchedule().getYearSchedule()) {
 			if (i < sp.getDurationCum()) {
-				return sp.getConso()*this.getPower();
+				return sp.getConso() * this.getPower();
 			}
 		}
 		throw new IllegalArgumentException("Your index must be inferior to 365");
 	}
+
+	@Override
+	public String toString() {
+		return "{" + " power='" + getPower() + "'" + ", schedule='" + getSchedule() + "'" + "}";
+	}
+
 }

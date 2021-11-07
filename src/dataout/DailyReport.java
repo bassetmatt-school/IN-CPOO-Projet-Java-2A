@@ -1,3 +1,4 @@
+package dataout;
 public class DailyReport {
     private int day;
     private int[] time;
@@ -60,11 +61,10 @@ public class DailyReport {
     @Override
     public String toString() {
         String result = "";
-        result += "Day number : " + this.getDay() + "\n";
-        time = this.getTime();
+        result += "Day number : " + (this.getDay()+1) + "\n";
         //TODO optimize !!
         for(int min = 0; min < 1440; min++) {
-            result += this.getTime()[min] + ";" 
+            result += this.getTime()[min]+1 + ";" 
                     + this.getConsoInstant()[min] + ";"
                     + this.getProdInstant()[min] + ";"
                     + Math.round(this.getConsoCumul()[min]/60*100)/100. + ";"

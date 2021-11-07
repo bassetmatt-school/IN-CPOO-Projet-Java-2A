@@ -1,3 +1,7 @@
+package dataout;
+
+import simulation.Simulation;
+
 public class DataOutput {
     /**
      * 

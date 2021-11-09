@@ -1,65 +1,73 @@
 package simulation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import data.AnnualReport;
 import data.DailyReport;
+import data.DataOutput;
 import electricity.Consumer;
 import electricity.Device;
-import electricity.ElecEntity;
+import electricity.EntitiesGenerator;
 import electricity.PowerPlant;
 
-public class Simulation {
-	private ArrayList<Consumer> consumerlist;
-	private ArrayList<PowerPlant> plantlist;
+abstract public class Simulation {
+	private static ArrayList<Consumer> cityPeople;
+	private static ArrayList<PowerPlant> cityPlants;
+	private static ArrayList<Device> deviceList;
+	private static ArrayList<PowerPlant> plantList;
 
-	private ArrayList<Device> deviceList = new ArrayList<Device>();
 
-	public Simulation() {
-		this.consumerlist = new ArrayList<Consumer>();
-		this.plantlist = new ArrayList<PowerPlant>();
-	}
-
-	public Simulation(ArrayList<Consumer> consumerlist, ArrayList<PowerPlant> plantlist) {
-		this.consumerlist = consumerlist;
-		this.plantlist = plantlist;
-	}
-
-	public void addConsumer(Consumer cons) {
-		this.consumerlist.add(cons);
-	}
-
-	public void addPlant(PowerPlant plant) {
-		this.plantlist.add(plant);
-	}
-
-	public void createDeviceList() {
-		for (Consumer cons : consumerlist) {
-			for (Device dev : cons.getDevicelist()) {
-				this.deviceList.add(dev);
+	
+	
+	private static void setDeviceList() {
+		ArrayList<Device> deviceList = new ArrayList<Device>();
+		for (Consumer cons : cityPeople) {
+			for (Device dev : cons.getDeviceList()) {
+				deviceList.add(dev);
 			}
 		}
+		Simulation.deviceList = deviceList;
+	}
+	
+	private static void setPlantList() {
+		ArrayList<PowerPlant> plantList = new ArrayList<PowerPlant>();
+		for (PowerPlant plt : cityPlants) {
+			plantList.add(plt);
+		}
+		Simulation.plantList = plantList;
 	}
 
-	public DailyReport simulateDay(int i) {
-		this.createDeviceList();
-		DailyReport dRep = new DailyReport(i);
-		double yearPow;
-		int consoMinute;
-		for (ElecEntity ent : this.deviceList) {
-			yearPow = ent.getPowerYear(i) / 100;
-			for (int minute = 0; minute < 1440; minute++) {
-				consoMinute = ent.getConsoMinute(minute);
-				dRep.addMinuteConso(minute, consoMinute / 100 * yearPow);
-			}
+	public static void initSimulation() throws IllegalArgumentException, IOException {
+		EntitiesGenerator.generateCity();
+		cityPeople = EntitiesGenerator.getCityPeople();
+		cityPlants = EntitiesGenerator.getCityPlants();
+		setDeviceList();
+		setPlantList();
+	}
+	
+	public static DailyReport generateDailyReport(int day) {
+		double[] conso = new double[1440];
+		double[] prod = new double[1440];
+		for (Device dev : deviceList) {
+			conso = dev.computeConsoDay(day, conso, dev.getPower());
 		}
-		for (ElecEntity ent : this.plantlist) {
-			yearPow = ent.getPowerYear(i) / 100;
-			for (int minute = 0; minute < 1440; minute++) {
-				consoMinute = ent.getConsoMinute(minute);
-				dRep.addMinuteProd(minute, consoMinute / 100 * yearPow);
-			}
+		for (PowerPlant plt : plantList) {
+			prod = plt.computeConsoDay(day, prod, plt.getPower());
 		}
-		return dRep;
+		return new DailyReport(day, conso, prod);	
+	}
+
+	public static void main(String[] args) throws IllegalArgumentException, IOException {
+		initSimulation();
+		AnnualReport anRep = new AnnualReport();
+		DailyReport dRep;
+		for (int day=0; day<365;day++) {
+			dRep = generateDailyReport(day);
+			DataOutput.createDaily(day, dRep, anRep);
+			DataOutput.createAnnual(anRep);
+		}
+
 	}
 
 }

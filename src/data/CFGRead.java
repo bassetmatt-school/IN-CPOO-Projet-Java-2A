@@ -1,9 +1,12 @@
 package data;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TreeMap;
 
 public class CFGRead {
 
@@ -16,170 +19,152 @@ public class CFGRead {
 	 *         Strings, one element per line
 	 * @throws IOException if the file can't be found
 	 */
-	private static ArrayList<String> readFile(String file) throws IOException {
+	private static ArrayList<String> readFile(String file) throws IOException{
 		BufferedReader in;
-		in = new BufferedReader(new FileReader(file));
-		String str = in.readLine();
 		ArrayList<String> relevantInfo = new ArrayList<String>();
-		while (str != null) {
-			if (str.equals("") || str.charAt(0) == '#') {
+		try {
+			in = new BufferedReader(new FileReader(file));
+			String str = in.readLine();
+			
+			while (str != null) {
+				//line isn't empty or a comment
+				if (!(str.equals("") || str.charAt(0) == '#')) {
+					relevantInfo.add(str);
+				}
 				str = in.readLine();
-				continue;
 			}
-			relevantInfo.add(str);
-			str = in.readLine();
+			in.close();
+		} catch (FileNotFoundException fnf) {
+			throw new FileNotFoundException("File not found");
+		} catch (IOException e) {
+			throw new IOException("Problem while reading file + \""+file+"\", please check file");
 		}
-		in.close();
 		return relevantInfo;
 	}
 
-	/**
-	 * A method to read the properties files adapted to their format
-	 * 
-	 * @param file the file to read
-	 * @return A list of all the properties of the devices described in the file
-	 * @throws IOException
-	 */
-	private static ArrayList<EntityProp> readEntitysettings(String file) throws IOException {
-		ArrayList<EntityProp> deviceListSettings = new ArrayList<EntityProp>();
-		ArrayList<String> relevantInfo;
-		relevantInfo = readFile(file);
-		int step = 0;
-
-		String name = "";
-		double power = 0;
-		int d_sch_id = 0, w_sch_id = 0, m_sch_id = 0;
-		for (String str : relevantInfo) {
-			str = str.split("= ")[1];
-			switch (step) {
-				case 0:
-					name = str;
-					step++;
+	private static int[] strToArray(String str) {
+		String[] stringArr = str.split(" ");
+		int[] intArr = Arrays.stream(stringArr).mapToInt(Integer::parseInt).toArray();
+		return intArr;
+	}
+	public static ArrayList<ArrayList<int[]>> extractSchedules() throws IOException {
+		ArrayList<ArrayList<int[]>> allSchedulesArray = new ArrayList<ArrayList<int[]>>();
+		ArrayList<String> fileInfo = readFile("config/schedules.cfg");
+		ArrayList<int[]> tempArray = new ArrayList<int[]>();
+		for (String str : fileInfo) {
+			switch (str) {
+				case "@day" :
 					break;
-				case 1:
-					power = Double.parseDouble(str);
-					step++;
+				case "@week" :
+					allSchedulesArray.add(tempArray);
+					tempArray = new ArrayList<int[]>();
 					break;
-				case 2:
-					d_sch_id = Integer.parseInt(str);
-					step++;
-					break;
-				case 3:
-					w_sch_id = Integer.parseInt(str);
-					step++;
-					break;
-				case 4:
-					m_sch_id = Integer.parseInt(str);
-					step = 0;
-					deviceListSettings.add(new EntityProp(name, power, d_sch_id, w_sch_id, m_sch_id));
+				case "@month" :
+					allSchedulesArray.add(tempArray);
+					tempArray = new ArrayList<int[]>();
 					break;
 				default:
+					tempArray.add(strToArray(str));
 					break;
 			}
 		}
-		return deviceListSettings;
+		allSchedulesArray.add(tempArray);
+		return allSchedulesArray;
 	}
 
-	/**
-	 * Specific method for the devices, just an execution of `readEntitysettings`
-	 * 
-	 * @return A list of the properties of the devices
-	 * @throws IOException
-	 */
-	public static ArrayList<EntityProp> devicesProps() throws IOException {
-		return readEntitysettings("config/properties_devices.cfg");
-	}
 
-	/**
-	 * Specific method for the plants, just an execution of `readEntitysettings`
-	 * 
-	 * @return A list of the properties of the plants
-	 * @throws IOException
-	 */
-	public static ArrayList<EntityProp> plantsProps() throws IOException {
-		return readEntitysettings("config/properties_plants.cfg");
-	}
+	
+	public static ArrayList<TreeMap<String, int[]>> readEntities() throws IOException {
+		ArrayList<TreeMap<String, int[]>> allEntities = new ArrayList<TreeMap<String, int[]>>();;
+		ArrayList<String> fileInfo = readFile("config/elecentities.cfg");
+		
+		TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
+		TreeMap<String, int[]> plantMap = new TreeMap<String, int[]>();;
+		
+		int indic = 0;
+		String[] tempStringArray;
+		int[] tempIntArray;
 
-	/**
-	 * Extracts the data from the schedule files for the months and weeks the code
-	 * is centralized in one method because the two files have the same format
-	 * 
-	 * @param file the file to read
-	 * @param size the number of fields in the schedule
-	 * @return An ArrayList with the data of the schedule
-	 * @throws IOException
-	 */
-	private static ArrayList<int[]> extractDataMonthWeek(String file, int size) throws IOException {
-		ArrayList<int[]> scheduleList = new ArrayList<int[]>();
-		ArrayList<String> relevantInfo;
-		relevantInfo = readFile(file);
-
-		int step = 0;
-		int[] sch = null;
-		for (String str : relevantInfo) {
-			if (step == 0) {
-				step++;
-				sch = new int[size];
-			} else if (step <= size) {
-				str = str.split("= ")[1];
-				sch[step - 1] = Integer.parseInt(str);
-				step++;
-			} else if (step == size + 1) {
-				step = 1;
-				scheduleList.add(sch);
-				sch = new int[size];
+		for (String str : fileInfo) {
+			switch (str) {
+				case "@devices" :
+					indic = 0;
+					break;
+				case "@plants" :
+					indic = 1;
+					break;
+				default:
+					tempStringArray = str.split(" : ");
+					tempIntArray = strToArray(tempStringArray[1]);
+					if (indic == 0) {
+						deviceMap.put(tempStringArray[0], tempIntArray);
+					} else {
+						plantMap.put(tempStringArray[0], tempIntArray);
+					}
+					break;
 			}
 		}
-		scheduleList.add(sch);
-		return scheduleList;
+		allEntities.add(deviceMap);
+		allEntities.add(plantMap);
+		return allEntities;
 	}
 
-	/**
-	 * Specific method for the months, just an execution of `extractDataMonthWeek`
-	 * 
-	 * @return An ArrayList with the data of the schedule
-	 * @throws IOException
-	 */
-	public static ArrayList<int[]> readScheduleMonth() throws IOException {
-		return extractDataMonthWeek("config/schedules_month.cfg", 12);
+	// Familly : Oven 2 : Fridge 1 => Familly : Oven Oven Fridge 
+	public static ArrayList<String> formatRepeat(ArrayList<String> fileInfo) {
+		ArrayList<String> formattedText = new ArrayList<String>();
+
+		String[] linesplit;
+		String[] subsplit;
+		String tempStr;
+		for (String str : fileInfo) {
+			if (str.charAt(0) == '@') {
+				formattedText.add(str);
+				continue;
+			}
+			tempStr = "";
+			linesplit = str.split(" : ");
+			tempStr += linesplit[0] + " :";
+			for (int i = 1; i< linesplit.length;i++) {
+				subsplit = linesplit[i].split(" ");
+				tempStr += (" " + subsplit[0]).repeat(Integer.parseInt(subsplit[1]));
+			}
+			formattedText.add(tempStr);
+		}
+		return formattedText;
 	}
 
-	/**
-	 * Specific method for the weeks, just an execution of `extractDataMonthWeek`
-	 * 
-	 * @return An ArrayList with the data of the schedule
-	 * @throws IOException
-	 */
-	public static ArrayList<int[]> readScheduleWeek() throws IOException {
-		return extractDataMonthWeek("config/schedules_week.cfg", 7);
-	}
+	public static ArrayList<TreeMap<String, String[]>> readCity() throws IOException {
+		ArrayList<TreeMap<String, String[]>> city = new ArrayList<TreeMap<String, String[]>>();;
+		ArrayList<String> formatFileInfo = formatRepeat(readFile("config/city.cfg"));
 
-	/**
-	 * Extracts the data from the schedule files for days
-	 * 
-	 * @return An ArrayList with the data of the schedule
-	 * @throws IOException
-	 */
-	public static ArrayList<ArrayList<int[]>> readScheduleDay() throws IOException {
-		ArrayList<ArrayList<int[]>> scheduleList = new ArrayList<ArrayList<int[]>>();
-		ArrayList<String> relevantInfo;
-		relevantInfo = readFile("config/schedules_day.cfg");
+		TreeMap<String, String[]> consumers = new TreeMap<String, String[]>();
+		TreeMap<String, String[]> cityPeople = new TreeMap<String, String[]>();;
+		
+		int indic = 0;
+		String[] linesplit;
+		String[] subsplit;
 
-		ArrayList<int[]> sch = null;
-		for (String str : relevantInfo) {
-			if (str.charAt(0) == 'i') {
-				if (sch != null) {
-					scheduleList.add(sch);
-				}
-				sch = new ArrayList<int[]>();
-			} else {
-				str = str.split("= ")[1];
-				String[] params = str.split("-");
-				sch.add(new int[] { Integer.parseInt(params[0]), Integer.parseInt(params[1]),
-						Integer.parseInt(params[2]) });
+		for (String str : formatFileInfo) {
+			switch (str) {
+				case "@consumers" :
+					indic = 0;
+					break;
+				case "@city " :
+					indic = 1;
+					break;
+				default:
+					linesplit = str.split(" : ");
+					subsplit = linesplit[1].split(" ");
+					if (indic == 0) {
+						consumers.put(linesplit[0], subsplit);
+					} else {
+						cityPeople.put(linesplit[0], subsplit);
+					}
+					break;
 			}
 		}
-		scheduleList.add(sch);
-		return scheduleList;
+		city.add(consumers);
+		city.add(cityPeople);
+		return city;
 	}
 }

@@ -1,14 +1,10 @@
 package electricity;
 
-import utilitary.schedules.Schedule;
+import java.io.IOException;
 
 public class PowerPlant extends ElecEntity {
-	public PowerPlant(double power) {
-		super(power);
+	
+	public PowerPlant(int[] inputArray) throws IOException, IllegalArgumentException {
+		super(inputArray);
 	}
-
-	public PowerPlant(double power, Schedule schedule) {
-		super(power, schedule);
-	}
-
 }

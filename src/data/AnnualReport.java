@@ -65,9 +65,9 @@ public class AnnualReport {
 		this.day[day] = day;
 		this.consoInstant[day] = dRep.getConsoCumul()[1439];
 		this.prodInstant[day] = dRep.getProdCumul()[1439];
-		if (day != 0){
-			this.consoCumul[day] += consoCumul[day-1];
-			this.prodCumul[day] += prodCumul[day-1];
+		if (day != 0) {
+			this.consoCumul[day] += consoCumul[day - 1];
+			this.prodCumul[day] += prodCumul[day - 1];
 		} else {
 			this.consoCumul[0] = consoInstant[0];
 			this.prodCumul[0] = prodInstant[0];
@@ -77,10 +77,9 @@ public class AnnualReport {
 	@Override
 	public String toString() {
 		String result = "";
-		// TODO optimize !!
 		for (int day = 0; day < 365; day++) {
-			result += this.getDay()[day] + ";" + this.getConsoInstant()[day] + ";" + this.getProdInstant()[day]
-					+ ";" + Math.round(this.getConsoCumul()[day] * 100) / 100. + ";"
+			result += this.getDay()[day] + ";" + this.getConsoInstant()[day] + ";" + this.getProdInstant()[day] + ";"
+					+ Math.round(this.getConsoCumul()[day] * 100) / 100. + ";"
 					+ Math.round(this.getProdCumul()[day] * 100) / 100. + "\n";
 		}
 		return result;

@@ -1,20 +1,20 @@
 package simulation;
 
+import java.io.IOException;
+
+import data.AnnualReport;
+import data.DailyReport;
+import data.DataOutput;
 
 public class SimulationMain {
-	/*
-	public static void main(String[] args) throws FileNotFoundException {
-		DailyReport dRep;
+	public static void main(String[] args) throws IllegalArgumentException, IOException {
+		Simulation.initSimulation();
 		AnnualReport anRep = new AnnualReport();
-		
-		Simulation sim = new Simulation();
-		sim.addConsumer(new Family());
-		sim.addPlant(new Nuclear());
+		DailyReport dRep;
 		for (int day = 0; day < 365; day++) {
-			dRep = sim.simulateDay(day);
-			DataOutput.createDaily(day, dRep, anRep);	
+			dRep = Simulation.generateDailyReport(day);
+			DataOutput.createDaily(day, dRep, anRep);
+			DataOutput.createAnnual(anRep);
 		}
-		DataOutput.createAnnual(anRep);
 	}
-	*/
 }

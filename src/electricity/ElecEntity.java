@@ -8,14 +8,13 @@ import utilitary.schedules.Schedule;
 import utilitary.schedules.ScheduleGenerator;
 import utilitary.schedules.SchedulePart;
 
-abstract public class ElecEntity{
+abstract public class ElecEntity {
 	private ArrayList<SchedulePart> scheduleDay;
 	private ArrayList<SchedulePart> scheduleYear;
 	private double power;
 	private int hSch;
-    private int wSch;
-    private int mSch;
-
+	private int wSch;
+	private int mSch;
 
 	public ElecEntity(double power, int hSch, int wSch, int mSch) throws IOException {
 		this.power = power;
@@ -23,33 +22,38 @@ abstract public class ElecEntity{
 		this.wSch = wSch;
 		this.mSch = mSch;
 		Schedule schedule = ScheduleGenerator.generateSchedule(hSch, wSch, mSch);
-		this.scheduleDay  = schedule.getDaySchedule();
-		this.scheduleYear = schedule.getYearSchedule();	
+		this.scheduleDay = schedule.getDaySchedule();
+		this.scheduleYear = schedule.getYearSchedule();
 	}
-	
+
 	public ElecEntity(int[] inputArray) throws IOException {
 		this.power = (double) inputArray[0];
-		this.hSch  = inputArray[1];
-		this.wSch  = inputArray[2];
-		this.mSch  = inputArray[3];
+		this.hSch = inputArray[1];
+		this.wSch = inputArray[2];
+		this.mSch = inputArray[3];
 		setSchedule();
 	}
 
 	public ArrayList<SchedulePart> getscheduleDay() {
 		return scheduleDay;
 	}
+
 	public ArrayList<SchedulePart> getscheduleYear() {
 		return scheduleYear;
 	}
+
 	public double getPower() {
 		return power;
 	}
+
 	public double gethSch() {
 		return hSch;
 	}
+
 	public double getwSch() {
 		return wSch;
 	}
+
 	public double getmSch() {
 		return mSch;
 	}
@@ -61,10 +65,11 @@ abstract public class ElecEntity{
 	public void setPower(double power) {
 		this.power = power;
 	}
+
 	public void setSchedule() throws IOException {
 		Schedule schedule = ScheduleGenerator.generateSchedule(hSch, wSch, mSch);
-		this.scheduleDay  = schedule.getDaySchedule();
-		this.scheduleYear = schedule.getYearSchedule();	
+		this.scheduleDay = schedule.getDaySchedule();
+		this.scheduleYear = schedule.getYearSchedule();
 	}
 
 	public void setScheduleIds(int hSch, int wSch, int mSch) {
@@ -73,14 +78,14 @@ abstract public class ElecEntity{
 		this.mSch = mSch;
 	}
 
-	public double[] computeConsoDay(int day,double[] currentconso, double power) {
+	public double[] computeConsoDay(int day, double[] currentconso, double power) {
 		int count;
 		int i = 0;
-		double mult = getConsoDay(day)/100.;
+		double mult = getConsoDay(day) / 100.;
 		for (SchedulePart schp : scheduleDay) {
 			count = 0;
 			while (count < schp.getDuration()) {
-				currentconso[i] += power*mult*schp.getConso()/100.;
+				currentconso[i] += power * mult * schp.getConso() / 100.;
 				i++;
 				count++;
 			}
@@ -110,13 +115,14 @@ abstract public class ElecEntity{
 			return false;
 		}
 		ElecEntity elecEntity = (ElecEntity) o;
-		return Objects.equals(scheduleDay, elecEntity.scheduleDay) && Objects.equals(scheduleYear, elecEntity.scheduleYear) && power == elecEntity.power && hSch == elecEntity.hSch && wSch == elecEntity.wSch && mSch == elecEntity.mSch;
+		return Objects.equals(scheduleDay, elecEntity.scheduleDay)
+				&& Objects.equals(scheduleYear, elecEntity.scheduleYear) && power == elecEntity.power
+				&& hSch == elecEntity.hSch && wSch == elecEntity.wSch && mSch == elecEntity.mSch;
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(scheduleDay, scheduleYear, power, hSch, wSch, mSch);
 	}
-
 
 }

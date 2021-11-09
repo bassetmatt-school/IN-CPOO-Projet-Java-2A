@@ -23,9 +23,7 @@ public class Consumer {
 
 	@Override
 	public String toString() {
-		return "{" +
-			" deviceList='" + getDeviceList() + "'" +
-			"}";
+		return "{" + " deviceList='" + getDeviceList() + "'" + "}";
 	}
 
 }

@@ -70,7 +70,6 @@ public class SchedulePart {
 		return "{" + getConso() + "," + getDuration() + "," + getDurationCum() + "}";
 	}
 
-
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -79,14 +78,13 @@ public class SchedulePart {
 			return false;
 		}
 		SchedulePart schedulePart = (SchedulePart) o;
-		return conso == schedulePart.conso && duration == schedulePart.duration && durationCum == schedulePart.durationCum;
+		return conso == schedulePart.conso && duration == schedulePart.duration
+				&& durationCum == schedulePart.durationCum;
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(conso, duration, durationCum);
 	}
-
-
 
 }

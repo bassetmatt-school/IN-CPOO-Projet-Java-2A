@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 import data.CFGRead;
 
-
 abstract public class EntitiesGenerator {
 	private static TreeMap<String, int[]> devicesCFG;
 	private static TreeMap<String, int[]> plantsCFG;
@@ -18,9 +17,9 @@ abstract public class EntitiesGenerator {
 	public static void getCFG() throws IOException {
 		ArrayList<TreeMap<String, int[]>> entitiesCFG = CFGRead.readEntities();
 		EntitiesGenerator.devicesCFG = entitiesCFG.get(0);
-		EntitiesGenerator.plantsCFG  = entitiesCFG.get(1);
+		EntitiesGenerator.plantsCFG = entitiesCFG.get(1);
 		ArrayList<TreeMap<String, String[]>> cityCFG = CFGRead.readCity();
-		EntitiesGenerator.consumersCFG  = cityCFG.get(0);
+		EntitiesGenerator.consumersCFG = cityCFG.get(0);
 		EntitiesGenerator.cityStrucureCFG = cityCFG.get(1);
 	}
 
@@ -32,7 +31,6 @@ abstract public class EntitiesGenerator {
 		return cityPlants;
 	}
 
-
 	public static TreeMap<String, Device> formatDeviceMap() throws IOException, IllegalArgumentException {
 		if (devicesCFG == null) {
 			getCFG();
@@ -41,7 +39,7 @@ abstract public class EntitiesGenerator {
 		int[] tempArray;
 		for (String key : devicesCFG.keySet()) {
 			tempArray = devicesCFG.get(key);
-			deviceMap.put(key,new Device(tempArray));
+			deviceMap.put(key, new Device(tempArray));
 		}
 		return deviceMap;
 	}
@@ -54,16 +52,16 @@ abstract public class EntitiesGenerator {
 		int[] tempArray;
 		for (String key : plantsCFG.keySet()) {
 			tempArray = plantsCFG.get(key);
-			plantMap.put(key,new PowerPlant(tempArray));
+			plantMap.put(key, new PowerPlant(tempArray));
 		}
 		return plantMap;
 	}
 
-
-	public static TreeMap<String, Consumer> formatConsMap(TreeMap<String, Device> deviceMap) throws IOException, IllegalArgumentException {
+	public static TreeMap<String, Consumer> formatConsMap(TreeMap<String, Device> deviceMap)
+			throws IOException, IllegalArgumentException {
 		TreeMap<String, Consumer> consMap = new TreeMap<String, Consumer>();
 		String[] tempList;
-		//key = Familly
+		// key = Familly
 		ArrayList<Device> tempDeviceList;
 		for (String key : consumersCFG.keySet()) {
 			tempDeviceList = new ArrayList<Device>();
@@ -73,12 +71,13 @@ abstract public class EntitiesGenerator {
 				dev = deviceMap.get(key2);
 				tempDeviceList.add(dev);
 			}
-			consMap.put(key,new Consumer(tempDeviceList));
+			consMap.put(key, new Consumer(tempDeviceList));
 		}
 		return consMap;
 	}
 
-	public static ArrayList<Consumer> formatCityPeople(TreeMap<String, Consumer> consMap) throws IOException, IllegalArgumentException {
+	public static ArrayList<Consumer> formatCityPeople(TreeMap<String, Consumer> consMap)
+			throws IOException, IllegalArgumentException {
 		ArrayList<Consumer> cityPeople = new ArrayList<Consumer>();
 		String[] consList = cityStrucureCFG.get("People");
 		Consumer cons;
@@ -88,7 +87,9 @@ abstract public class EntitiesGenerator {
 		}
 		return cityPeople;
 	}
-	public static ArrayList<PowerPlant> formatCityPlants(TreeMap<String, PowerPlant> plantMap) throws IOException, IllegalArgumentException {
+
+	public static ArrayList<PowerPlant> formatCityPlants(TreeMap<String, PowerPlant> plantMap)
+			throws IOException, IllegalArgumentException {
 		ArrayList<PowerPlant> cityPlants = new ArrayList<PowerPlant>();
 		String[] consList = cityStrucureCFG.get("Plants");
 		PowerPlant cons;
@@ -109,11 +110,12 @@ abstract public class EntitiesGenerator {
 		EntitiesGenerator.cityPeople = cityPeople;
 		EntitiesGenerator.cityPlants = cityPlants;
 	}
+
 	public static void main(String[] args) throws IOException {
 		generateCity();
 
 		TreeMap<String, Device> dMap = formatDeviceMap();
-		TreeMap<String, Consumer> consMap= formatConsMap(dMap);
+		TreeMap<String, Consumer> consMap = formatConsMap(dMap);
 		TreeMap<String, PowerPlant> plantMap = formatPlantMap();
 		System.out.println(consMap);
 		ArrayList<Consumer> ppl = formatCityPeople(consMap);

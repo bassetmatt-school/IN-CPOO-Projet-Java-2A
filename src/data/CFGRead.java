@@ -17,17 +17,18 @@ public class CFGRead {
 	 * @param file the file to read
 	 * @return the relevant information contained in the file in an ArrayList of
 	 *         Strings, one element per line
-	 * @throws IOException if the file can't be found
+	 * @throws FileNotFoundException if the file can't be found
+	 * @throws IOException           If there's a problem while reading the file
 	 */
-	private static ArrayList<String> readFile(String file) throws IOException{
+	private static ArrayList<String> readFile(String file) throws IOException {
 		BufferedReader in;
 		ArrayList<String> relevantInfo = new ArrayList<String>();
 		try {
 			in = new BufferedReader(new FileReader(file));
 			String str = in.readLine();
-			
+
 			while (str != null) {
-				//line isn't empty or a comment
+				// line isn't empty or a comment
 				if (!(str.equals("") || str.charAt(0) == '#')) {
 					relevantInfo.add(str);
 				}
@@ -37,7 +38,7 @@ public class CFGRead {
 		} catch (FileNotFoundException fnf) {
 			throw new FileNotFoundException("File not found");
 		} catch (IOException e) {
-			throw new IOException("Problem while reading file + \""+file+"\", please check file");
+			throw new IOException("Problem while reading file + \"" + file + "\", please check file");
 		}
 		return relevantInfo;
 	}
@@ -47,19 +48,20 @@ public class CFGRead {
 		int[] intArr = Arrays.stream(stringArr).mapToInt(Integer::parseInt).toArray();
 		return intArr;
 	}
+
 	public static ArrayList<ArrayList<int[]>> extractSchedules() throws IOException {
 		ArrayList<ArrayList<int[]>> allSchedulesArray = new ArrayList<ArrayList<int[]>>();
 		ArrayList<String> fileInfo = readFile("config/schedules.cfg");
 		ArrayList<int[]> tempArray = new ArrayList<int[]>();
 		for (String str : fileInfo) {
 			switch (str) {
-				case "@day" :
+				case "@day":
 					break;
-				case "@week" :
+				case "@week":
 					allSchedulesArray.add(tempArray);
 					tempArray = new ArrayList<int[]>();
 					break;
-				case "@month" :
+				case "@month":
 					allSchedulesArray.add(tempArray);
 					tempArray = new ArrayList<int[]>();
 					break;
@@ -72,25 +74,25 @@ public class CFGRead {
 		return allSchedulesArray;
 	}
 
-
-	
 	public static ArrayList<TreeMap<String, int[]>> readEntities() throws IOException {
-		ArrayList<TreeMap<String, int[]>> allEntities = new ArrayList<TreeMap<String, int[]>>();;
+		ArrayList<TreeMap<String, int[]>> allEntities = new ArrayList<TreeMap<String, int[]>>();
+		;
 		ArrayList<String> fileInfo = readFile("config/elecentities.cfg");
-		
+
 		TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
-		TreeMap<String, int[]> plantMap = new TreeMap<String, int[]>();;
-		
+		TreeMap<String, int[]> plantMap = new TreeMap<String, int[]>();
+		;
+
 		int indic = 0;
 		String[] tempStringArray;
 		int[] tempIntArray;
 
 		for (String str : fileInfo) {
 			switch (str) {
-				case "@devices" :
+				case "@devices":
 					indic = 0;
 					break;
-				case "@plants" :
+				case "@plants":
 					indic = 1;
 					break;
 				default:
@@ -109,7 +111,7 @@ public class CFGRead {
 		return allEntities;
 	}
 
-	// Familly : Oven 2 : Fridge 1 => Familly : Oven Oven Fridge 
+	// Familly : Oven 2 : Fridge 1 => Familly : Oven Oven Fridge
 	public static ArrayList<String> formatRepeat(ArrayList<String> fileInfo) {
 		ArrayList<String> formattedText = new ArrayList<String>();
 
@@ -124,7 +126,7 @@ public class CFGRead {
 			tempStr = "";
 			linesplit = str.split(" : ");
 			tempStr += linesplit[0] + " :";
-			for (int i = 1; i< linesplit.length;i++) {
+			for (int i = 1; i < linesplit.length; i++) {
 				subsplit = linesplit[i].split(" ");
 				tempStr += (" " + subsplit[0]).repeat(Integer.parseInt(subsplit[1]));
 			}
@@ -134,22 +136,24 @@ public class CFGRead {
 	}
 
 	public static ArrayList<TreeMap<String, String[]>> readCity() throws IOException {
-		ArrayList<TreeMap<String, String[]>> city = new ArrayList<TreeMap<String, String[]>>();;
+		ArrayList<TreeMap<String, String[]>> city = new ArrayList<TreeMap<String, String[]>>();
+		;
 		ArrayList<String> formatFileInfo = formatRepeat(readFile("config/city.cfg"));
 
 		TreeMap<String, String[]> consumers = new TreeMap<String, String[]>();
-		TreeMap<String, String[]> cityPeople = new TreeMap<String, String[]>();;
-		
+		TreeMap<String, String[]> cityPeople = new TreeMap<String, String[]>();
+		;
+
 		int indic = 0;
 		String[] linesplit;
 		String[] subsplit;
 
 		for (String str : formatFileInfo) {
 			switch (str) {
-				case "@consumers" :
+				case "@consumers":
 					indic = 0;
 					break;
-				case "@city " :
+				case "@city ":
 					indic = 1;
 					break;
 				default:

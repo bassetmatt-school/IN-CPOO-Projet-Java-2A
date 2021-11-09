@@ -16,6 +16,7 @@ public class DailyReport {
 		this.consoCumul = new double[1440];
 		this.prodCumul = new double[1440];
 	}
+
 	public DailyReport(int day, double[] conso, double[] prod) {
 		this.day = day;
 		this.consoInstant = conso;
@@ -27,9 +28,9 @@ public class DailyReport {
 		prodCumul[0] = prod[0];
 		for (int i = 0; i < 1440; i++) {
 			time[i] = i;
-			if (i != 0){
-				consoCumul[i] += consoCumul[i-1] + conso[i];
-				prodCumul[i] += prodCumul[i-1] + prod[i];
+			if (i != 0) {
+				consoCumul[i] += consoCumul[i - 1] + conso[i];
+				prodCumul[i] += prodCumul[i - 1] + prod[i];
 			}
 		}
 		this.time = time;
@@ -61,16 +62,14 @@ public class DailyReport {
 		return this.prodCumul;
 	}
 
-
 	@Override
 	public String toString() {
 		String result = "";
 		result += "Day number : " + (this.getDay() + 1) + "\n";
-		// TODO optimize !!
 		for (int min = 0; min < 1440; min++) {
-			result += time[min] + ";" + consoInstant[min] + ";" + prodInstant[min]
-					+ ";" + Math.round(consoCumul[min] / 60 * 100) / 100. + ";"
-					+ Math.round(prodCumul[min] / 60 * 100) / 100. + "\n";
+			result += time[min] + ";" + consoInstant[min] + ";" + prodInstant[min] + ";"
+					+ Math.round(consoCumul[min] / 60 * 100) / 100. + ";" + Math.round(prodCumul[min] / 60 * 100) / 100.
+					+ "\n";
 		}
 		return result;
 	}
